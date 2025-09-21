@@ -8,15 +8,11 @@ const Logo = (props: React.SVGProps<SVGSVGElement>) => (
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
-    <defs>
-      <style>{`.vidhik-orange { fill: #FF6A0D; }`}</style>
-    </defs>
     <path
-      className="vidhik-orange"
+      fill="#FF6A0D"
       d="M20 10 L100 130 L180 10 L155 10 L100 80 L45 10 Z"
     />
     <g
-      className="vidhik-orange"
       stroke="#FF6A0D"
       strokeWidth="4"
       fill="none"
