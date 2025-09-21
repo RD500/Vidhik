@@ -103,7 +103,7 @@ graph TD
 graph TD
     subgraph User Interaction
         A(Start) --> B{Upload or Paste Document};
-        B --> C[Click "Demystify"];
+        B --> C[Click Demystify];
     end
 
     subgraph Backend Process
