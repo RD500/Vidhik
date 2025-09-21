@@ -135,18 +135,46 @@ The application is designed as a professional, three-panel dashboard layout:
 
 ### Brief About the Prototype
 
-The current prototype is a fully functional implementation of the vision. It successfully integrates the Next.js frontend with the Firebase Genkit backend to perform all the core functionalities described. Users can upload documents, receive a comprehensive multi-tab analysis, ask follow-up questions, and compare document versions. The session history and document management features are also operational, providing a complete and cohesive user experience that is ready for testing and evaluation.
+Vidhik AI is a comprehensive legal analysis suite designed to transform static legal documents into interactive, actionable intelligence through a sophisticated, user-centric system. It stands out with its multi-modal interaction, allowing users to upload files, paste text, or use voice commands for analysis. The platform's AI provides structured and practical outputs, such as summaries, risk analyses, and key obligations that can be directly exported to a calendar, rather than just a wall of text. This is all presented within a dynamic multi-pane user interface that supports seamless task switching and maintains a persistent session history for an efficient workflow. Underpinning this experience is a modular and scalable AI architecture that uses distinct, purpose-built flows and optimizes different AI models for specific tasks, ensuring both cost-effectiveness and high performance.
 
 ## 5. Detailed Instructions for Judges to Access and Test
 
-### Accessing the Solution
+### Local Setup Instructions
 
-1.  **Open the Application:** Please navigate to the provided application URL in your web browser.
-2.  **API Key Configuration:** The application requires a Google Gemini API key to function. Please enter your key into the `.env` file in the root directory:
+To run and test the application locally, please follow these steps.
+
+1.  **Clone the Repository:**
+    Open your terminal and clone the GitHub repository to your local machine:
+    ```bash
+    git clone <YOUR_REPOSITORY_URL>
+    cd <YOUR_PROJECT_DIRECTORY>
     ```
-    GEMINI_API_KEY="YOUR_API_KEY_HERE"
+
+2.  **Install Dependencies:**
+    Install the necessary Node.js packages using npm:
+    ```bash
+    npm install
     ```
-    After saving the `.env` file, the application will be ready for testing.
+
+3.  **API Key Configuration:**
+    The application requires a Google Gemini API key to function. Create a new file named `.env` in the root directory of the project. Then, open the `.env` file and add your API key as follows:
+    ```
+    GEMINI_API_KEY= "YOUR_API_KEY_HERE"
+    ```
+    Replace `"YOUR_API_KEY_HERE"` with your actual Gemini API key.
+
+4.  **Run the Application:**
+    Start the local development server:
+    ```bash
+    npm run dev
+    ```
+
+5.  **Access the Application:**
+    Open your web browser and navigate to the following URL:
+    [http://localhost:9002](http://localhost:9002)
+
+The application will now be running on your local machine and is ready for testing
+You can also test it using the hosted url - [vidhik] (https://vidhik.vercel.app/)
 
 ### Testing Scenarios
 
