@@ -108,7 +108,7 @@ graph TD
 
     subgraph Backend Process
         C --> D{Server Action Triggered};
-        D --> E[Call `demystifyDocument` Genkit Flow];
+        D --> E[Call demystifyDocument Genkit Flow];
         E --> F(Gemini API Call);
         F --> G[Receive Structured JSON];
     end
