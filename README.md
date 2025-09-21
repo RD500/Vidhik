@@ -146,8 +146,8 @@ To run and test the application locally, please follow these steps.
 1.  **Clone the Repository:**
     Open your terminal and clone the GitHub repository to your local machine:
     ```bash
-    git clone <YOUR_REPOSITORY_URL>
-    cd <YOUR_PROJECT_DIRECTORY>
+    git clone https://github.com/RD500/Vidhik.git
+    cd Vidhik
     ```
 
 2.  **Install Dependencies:**
@@ -174,7 +174,7 @@ To run and test the application locally, please follow these steps.
     [http://localhost:9002](http://localhost:9002)
 
 The application will now be running on your local machine and is ready for testing
-You can also test it using the hosted url - [vidhik] (https://vidhik.vercel.app/)
+You can also test it using the hosted url - [vidhik](https://vidhik.vercel.app/)
 
 ### Testing Scenarios
 
