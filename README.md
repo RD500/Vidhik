@@ -28,7 +28,7 @@ This vision directly aligns with the focus area of **empowering people with acce
 
 The project is highly feasible and built for scale:
 
-*   **Feasibility:** The technical foundation is solid and uses modern, production-ready technologies. By using **Firebase Genkit** to orchestrate calls to Google's powerful **Google's Gemini 2.5 Pro & Gemini 2.5 Flash via Vertex AI**, we can achieve a high degree of accuracy in contextual understanding and analysis right from the start.
+*   **Feasibility:** The technical foundation is solid and uses modern, production-ready technologies. By using **Firebase Genkit** to orchestrate calls to Google's powerful **Gemini 2.5 Pro & Gemini 2.5 Flash via Vertex AI**, we can achieve a high degree of accuracy in contextual understanding and analysis right from the start.
 *   **Scalability:** The entire stack is serverless. **Next.js** provides a performant frontend, **Firebase Genkit** runs in a serverless environment, and **Firebase Authentication & Firestore** automatically scale to handle a massive number of users without manual intervention. The final application is deployed globally via **Google Cloud Run**.
 
 ## 2. Opportunity and Unique Value Proposition
@@ -90,21 +90,35 @@ The prototype is a fully functional web application that allows users to sign up
 *   **Authentication:** Firebase Authentication (Email/Password)
 *   **Deployment:** Google Cloud Run (containerized deployment)
 
+### RAG Implementation Details
+The core of Vidhik AI's intelligence relies on a direct and effective implementation of Retrieval-Augmented Generation (RAG). Instead of complex chunking or vectorization for this use case, we leverage the large context windows of the Gemini models.
+
+1.  **Contextual Grounding**: For every AI task (demystification, comparison, Q&A), the *entire text content* of the user's document(s) is passed directly to the model as part of the prompt.
+2.  **Genkit's `docs` Retriever**: For the conversational Q&A feature, the `ask` flow wraps the document text in a `Document.fromText()` object. This object is passed to the `ai.generate()` call via the `docs` parameter. This signals to Genkit and the Gemini model to treat this text as the primary source of truth for "retrieval."
+3.  **In-Prompt Instructions**: The prompts are engineered with critical instructions for the AI to base its answers *exclusively* on the provided document context, ensuring factual accuracy and preventing hallucinations.
+
+This approach simplifies the architecture while ensuring that every piece of analysis is directly traceable to the source document, providing a reliable and trustworthy user experience.
+
 ### Architecture & Process Flow Diagrams
 
 #### High-Level Architecture
 ```mermaid
 graph TD
-    A[User's Browser] -->|1. Login/Signup| B(Firebase Auth);
-    A -->|2. Uploads Document| C(Next.js Frontend);
-    C -->|3. Invokes Server Action| D(Next.js Server);
-    D -->|4. Calls Genkit Flow (RAG)| E(Firebase Genkit Backend);
-    E -->|5. Calls Gemini Model via Vertex AI| F{Gemini AI Models};
-    F -->|6. Returns Analysis| E;
-    E -->|7. Returns Structured Data| D;
-    D -->|8. Saves to Firestore| G(Firestore Database);
-    D -->|9. Sends Data to Client| C;
-    C -->|10. Renders Report & Enables Chat| A;
+    subgraph "User & Browser"
+        A[User's Browser] -->|1. Login/Signup| B(Firebase Auth);
+        A -->|2. Uploads Document| C(Next.js Frontend);
+    end
+
+    subgraph "Application Hosting (Google Cloud Run)"
+        C -->|3. Invokes Server Action| D(Next.js Server);
+        D -->|4. Calls Genkit Flow (RAG)| E(Firebase Genkit Backend);
+        E -->|5. Calls Gemini Model via Vertex AI| F{Gemini AI Models};
+        F -->|6. Returns Analysis| E;
+        E -->|7. Returns Structured Data| D;
+        D -->|8. Saves to Firestore| G[Firestore Database];
+        D -->|9. Sends Data to Client| C;
+        C -->|10. Renders Report & Enables Chat| A;
+    end
 ```
 
 #### Process Flow: AI Document Helper
@@ -115,8 +129,8 @@ graph TD
     end
     subgraph "Backend Processing (RAG)"
         B --> C[2. Next.js server calls 'demystify' Genkit Flow];
-        C --> D["3. Genkit sends document to Gemini 2.5 Pro for full-text analysis (RAG)"];
-        D --> E[4. Gemini performs OCR, PII Masking, & generates structured analysis];
+        C --> D["3. Genkit sends full document text to Gemini 2.5 Pro for analysis (RAG)"];
+        D --> E[4. Gemini performs OCR, PII Masking, & generates structured analysis based on provided text];
         E --> F[5. Gemini returns structured JSON output];
         F --> G[6. Genkit Flow completes, returns data to Next.js];
     end
@@ -127,7 +141,7 @@ graph TD
     end
     subgraph "Conversational Q&A (RAG)"
         J --> K[10. User asks a question in chat];
-        K --> L["11. 'ask' Genkit Flow is called with question and full document text (RAG)"];
+        K --> L["11. 'ask' Genkit Flow is called with question and full document text (RAG via `docs` retriever)"];
         L --> M[12. Gemini uses document as context to generate an answer];
         M --> N[13. Answer is streamed back to UI];
     end
@@ -141,8 +155,8 @@ graph TD
     end
     subgraph "Backend Processing (RAG)"
         B --> C[2. Next.js calls 'compare' Genkit Flow];
-        C --> D["3. Genkit sends both documents to Gemini 2.5 Pro (RAG)"];
-        D --> E[4. Gemini analyzes differences and impacts];
+        C --> D["3. Genkit sends both full document texts to Gemini 2.5 Pro for comparison (RAG)"];
+        D --> E[4. Gemini analyzes differences and impacts based on the provided texts];
         E --> F[5. Gemini returns structured JSON report];
         F --> G[6. Genkit Flow returns data to Next.js];
     end
@@ -165,26 +179,45 @@ graph TD
 
 To run and test the application on your local machine, please follow these steps:
 
-1.  **Clone the Repository:**
+1.  **Prerequisites:**
+    *   **Node.js:** Ensure you have Node.js (v18 or newer) installed.
+    *   **Google Cloud CLI:** Install the `gcloud` CLI and authenticate by running `gcloud auth login`.
+    *   **Create a Firebase/Google Cloud Project:** If you don't have one, create a new project in the [Firebase Console](https://console.firebase.google.com/).
+
+2.  **Enable APIs & Get Key:**
+    *   In your Google Cloud project, enable the **Vertex AI API** and the **Cloud Build API**.
+    *   Go to the Vertex AI dashboard and get your **Gemini API Key**.
+
+3.  **Clone the Repository:**
     ```bash
     git clone <repository_url>
     cd <repository_folder>
     ```
-2.  **Install Dependencies:**
+4.  **Set up Environment Variables:**
+    *   Create a file named `.env` in the root of the project.
+    *   Add your Gemini API key to this file:
+        ```
+        GEMINI_API_KEY=your_api_key_here
+        ```
+
+5.  **Install Dependencies:**
     ```bash
     npm install
     ```
-3.  **Run the Development Server:**
+
+6.  **Run the Development Server:**
     ```bash
     npm run dev
     ```
-4.  **Access the Application:** Open your browser and navigate to `http://localhost:9002`. You can now sign up and use the application as described in the testing scenarios below.
+
+7.  **Access the Application:** Open your browser and navigate to `http://localhost:9002`. You can now sign up and use the application as described in the testing scenarios below.
 
 ### Deployment Instructions
 
-To deploy the application to Google Cloud Run, use the following command from the root of the project directory:
+To deploy the application to Google Cloud Run, use the following command from the root of the project directory. Ensure your `gcloud` CLI is configured to use the correct Google Cloud project.
 
 ```bash
+# This single command builds the container image using Cloud Build and deploys it to Cloud Run.
 gcloud run deploy vidhik-ai --source . --region us-central1
 ```
 
