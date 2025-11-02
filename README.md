@@ -83,7 +83,7 @@ The prototype is a fully functional web application that allows users to sign up
 
 ### Technologies Used
 *   **Frontend:** Next.js (App Router), React, TypeScript
-*   **UI:** Tailwind CSS, ShadCN UI, Framer Motion (for animations)
+*   **UI:** Tailwind CSS, ShadCN UI
 *   **AI Backend:** Firebase Genkit
 *   **AI Models:** Google's Gemini 2.5 Pro & Gemini 2.5 Flash via Vertex AI
 *   **Database:** Firestore (for storing user session history)
@@ -93,7 +93,7 @@ The prototype is a fully functional web application that allows users to sign up
 ### RAG Implementation Details
 The core of Vidhik AI's intelligence relies on a direct and effective implementation of Retrieval-Augmented Generation (RAG). Instead of complex chunking or vectorization for this use case, we leverage the large context windows of the Gemini models.
 
-1.  **Contextual Grounding**: For every AI task (demystification, comparison, Q&A), the *entire text content* of the user's document(s) is passed directly to the model as part of the prompt.
+1.  **Contextual Grounding**: For every AI task (demystification, comparison, Q&A), the *entire text content* of the user's document(s) is passed directly to the model as part of the prompt. This serves as the "retrieval" source.
 2.  **Genkit's `docs` Retriever**: For the conversational Q&A feature, the `ask` flow wraps the document text in a `Document.fromText()` object. This object is passed to the `ai.generate()` call via the `docs` parameter. This signals to Genkit and the Gemini model to treat this text as the primary source of truth for "retrieval."
 3.  **In-Prompt Instructions**: The prompts are engineered with critical instructions for the AI to base its answers *exclusively* on the provided document context, ensuring factual accuracy and preventing hallucinations.
 
@@ -181,40 +181,33 @@ To run and test the application on your local machine, please follow these steps
 
 1.  **Prerequisites:**
     *   **Node.js:** Ensure you have Node.js (v18 or newer) installed.
-    *   **Google Cloud CLI:** Install the `gcloud` CLI and authenticate by running `gcloud auth login`.
+    *   **Google Cloud CLI:** Install the `gcloud` CLI and authenticate by running `gcloud auth login`. This will handle authentication with Vertex AI.
     *   **Create a Firebase/Google Cloud Project:** If you don't have one, create a new project in the [Firebase Console](https://console.firebase.google.com/).
 
-2.  **Enable APIs & Get Key:**
-    *   In your Google Cloud project, enable the **Vertex AI API** and the **Cloud Build API**.
-    *   Go to the Vertex AI dashboard and get your **Gemini API Key**.
+2.  **Enable APIs:**
+    *   In your Google Cloud project, enable the **Vertex AI API** and the **Cloud Build API**. This is necessary for the AI features to work and for deployment.
 
 3.  **Clone the Repository:**
     ```bash
     git clone <repository_url>
     cd <repository_folder>
     ```
-4.  **Set up Environment Variables:**
-    *   Create a file named `.env` in the root of the project.
-    *   Add your Gemini API key to this file:
-        ```
-        GEMINI_API_KEY=your_api_key_here
-        ```
 
-5.  **Install Dependencies:**
+4.  **Install Dependencies:**
     ```bash
     npm install
     ```
 
-6.  **Run the Development Server:**
+5.  **Run the Development Server:**
     ```bash
     npm run dev
     ```
 
-7.  **Access the Application:** Open your browser and navigate to `http://localhost:9002`. You can now sign up and use the application as described in the testing scenarios below.
+6.  **Access the Application:** Open your browser and navigate to `http://localhost:9002`. You can now sign up and use the application as described in the testing scenarios below.
 
 ### Deployment Instructions
 
-To deploy the application to Google Cloud Run, use the following command from the root of the project directory. Ensure your `gcloud` CLI is configured to use the correct Google Cloud project.
+To deploy the application to Google Cloud Run, use the following command from the root of the project directory. Ensure your `gcloud` CLI is configured to use the correct Google Cloud project where you enabled the APIs.
 
 ```bash
 # This single command builds the container image using Cloud Build and deploys it to Cloud Run.
