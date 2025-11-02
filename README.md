@@ -15,7 +15,7 @@ This information gap puts individuals at a severe disadvantage, exposing them to
 
 **Vidhik AI** is an intelligent legal assistant designed to empower the common person by making legal documents simple, accessible, and understandable.
 
-Our vision is to **create a future where no one is disadvantaged by a contract they couldn't comprehend.** By leveraging the power of Generative AI, Vidhik AI acts as a private, secure, and insightful legal companion. It translates dense legal text into plain, simple English, proactively flags potential risks, and answers specific questions in a conversational manner.
+Our vision is to **create a future where no one is disadvantaged by a contract they couldn't comprehend.** By using the power of Generative AI, Vidhik AI acts as a private, secure, and insightful legal companion. It translates dense legal text into plain, simple English, proactively flags potential risks, and answers specific questions in a conversational manner.
 
 This vision directly aligns with the focus area of **empowering people with access to information and opportunity**. Vidhik AI achieves this by:
 
@@ -91,7 +91,7 @@ The prototype is a fully functional web application that allows users to sign up
 *   **Deployment:** Google Cloud Run (containerized deployment)
 
 ### RAG Implementation Details
-The core of Vidhik AI's intelligence relies on a direct and effective implementation of Retrieval-Augmented Generation (RAG). Instead of complex chunking or vectorization for this use case, we leverage the large context windows of the Gemini models.
+The core of Vidhik AI's intelligence relies on a direct and effective implementation of Retrieval-Augmented Generation (RAG).
 
 1.  **Contextual Grounding**: For every AI task (demystification, comparison, Q&A), the *entire text content* of the user's document(s) is passed directly to the model as part of the prompt. This serves as the "retrieval" source.
 2.  **Genkit's `docs` Retriever**: For the conversational Q&A feature, the `ask` flow wraps the document text in a `Document.fromText()` object. This object is passed to the `ai.generate()` call via the `docs` parameter. This signals to Genkit and the Gemini model to treat this text as the primary source of truth for "retrieval."
@@ -183,42 +183,52 @@ To run and test the application on your local machine, please follow these steps
     *   **Node.js:** Ensure you have Node.js (v18 or newer) installed.
     *   **Google Cloud CLI:** Install the `gcloud` CLI.
 
-2.  **Authenticate with Google Cloud:**
+2.  **Clone the Repository:**
+    ```bash
+    git clone <repository_url>
+    cd <repository_folder>
+    ```
+
+3.  **Authenticate with Google Cloud:**
     *   Open your terminal and run the following command to log into your Google Account:
     ```bash
     gcloud auth login
     ```
     *   This will open a browser window for you to complete the login process. This step is crucial for authenticating with Vertex AI.
 
-3.  **Enable APIs:**
-    *   In your Google Cloud project, enable the **Vertex AI API** and the **Cloud Build API**. This is necessary for the AI features to work and for deployment.
-
-4.  **Clone the Repository:**
-    ```bash
-    git clone <repository_url>
-    cd <repository_folder>
+4.  **Create Environment File:**
+    *   In the root of the project directory, create a new file named `.env.local`.
+    *   Add the following lines to the file, replacing `<your-gcp-project-id>` with your actual Google Cloud Project ID:
+    ```
+    GOOGLE_CLOUD_PROJECT="<your-gcp-project-id>"
+    GOOGLE_CLOUD_LOCATION="us-central1"
     ```
 
-5.  **Install Dependencies:**
+5.  **Enable APIs:**
+    *   In your Google Cloud project, enable the following APIs. You can do this via the Google Cloud Console UI or by using the `gcloud services enable` command.
+        *   **Vertex AI API** (`aiplatform.googleapis.com`)
+        *   **Cloud Build API** (`cloudbuild.googleapis.com`)
+
+6.  **Install Dependencies:**
     ```bash
     npm install
     ```
 
-6.  **Run the Development Server:**
+7.  **Run the Development Server:**
     ```bash
     npm run dev
     ```
 
-7.  **Access the Application:** Open your browser and navigate to `http://localhost:9002`. You can now sign up and use the application as described in the testing scenarios below.
+8.  **Access the Application:** Open your browser and navigate to `http://localhost:9002`. You can now sign up and use the application as described in the testing scenarios below.
 
 ### Deployment Instructions
 
 To deploy the application to Google Cloud Run, use the following command from the root of the project directory. Ensure your `gcloud` CLI is configured to use the correct Google Cloud project where you enabled the APIs.
 
 ```bash
-gcloud run deploy vidhik-ai --source . --region us-central1
+gcloud run deploy vidhik-ai --source . --region us-central1 --allow-unauthenticated
 ```
-This single command builds the container image using Cloud Build and deploys it to Cloud Run.
+This single command builds the container image using Cloud Build and deploys it to Cloud Run. The `--allow-unauthenticated` flag makes the service publicly accessible.
 
 ### Testing Scenarios
 
