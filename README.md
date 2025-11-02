@@ -110,9 +110,9 @@ graph TD
     end
 
     subgraph "Application Hosting (Google Cloud Run)"
-        C -->|3. Invokes Server Action| D(Next.js Server);
-        D -->|4. Calls Genkit Flow (RAG)| E(Firebase Genkit Backend);
-        E -->|5. Calls Gemini Model via Vertex AI| F{Gemini AI Models};
+        C -->|3. Invokes Server Action| D[Next.js Server];
+        D -->|4. Calls Genkit Flow (RAG)| E[Genkit Backend];
+        E -->|5. Calls Gemini via Vertex AI| F{Gemini AI Models};
         F -->|6. Returns Analysis| E;
         E -->|7. Returns Structured Data| D;
         D -->|8. Saves to Firestore| G[Firestore Database];
