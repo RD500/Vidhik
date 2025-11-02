@@ -109,7 +109,7 @@ graph TD
         A -->|2: Uploads Document| C(Next.js Frontend);
     end
 
-    subgraph H["Application Hosting — Google Cloud Run"]
+    subgraph H["`Application Hosting — Google Cloud Run`"]
         C -->|3: Invokes Server Action| D[Next.js Server];
         D -->|4: Calls Genkit Flow: RAG| E[Genkit Backend];
         E -->|5: Calls Gemini via Vertex AI| F{Gemini AI Models};
@@ -119,6 +119,7 @@ graph TD
         D -->|9: Sends Data to Client| C;
         C -->|10: Renders Report & Enables Chat| A;
     end
+
 
 ```
 
