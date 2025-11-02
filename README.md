@@ -129,7 +129,7 @@ graph TD
     end
     subgraph "Backend Processing (RAG)"
         B --> C[2. Next.js server calls 'demystify' Genkit Flow];
-        C --> D["3. Genkit sends full document text to Gemini 2.5 Pro for analysis (RAG)"];
+        C --> D["3. Genkit sends full document text to Gemini via Vertex AI for analysis (RAG)"];
         D --> E[4. Gemini performs OCR, PII Masking, & generates structured analysis based on provided text];
         E --> F[5. Gemini returns structured JSON output];
         F --> G[6. Genkit Flow completes, returns data to Next.js];
@@ -155,7 +155,7 @@ graph TD
     end
     subgraph "Backend Processing (RAG)"
         B --> C[2. Next.js calls 'compare' Genkit Flow];
-        C --> D["3. Genkit sends both full document texts to Gemini 2.5 Pro for comparison (RAG)"];
+        C --> D["3. Genkit sends both full document texts to Gemini via Vertex AI for comparison (RAG)"];
         D --> E[4. Gemini analyzes differences and impacts based on the provided texts];
         E --> F[5. Gemini returns structured JSON report];
         F --> G[6. Genkit Flow returns data to Next.js];
@@ -181,38 +181,44 @@ To run and test the application on your local machine, please follow these steps
 
 1.  **Prerequisites:**
     *   **Node.js:** Ensure you have Node.js (v18 or newer) installed.
-    *   **Google Cloud CLI:** Install the `gcloud` CLI and authenticate by running `gcloud auth login`. This will handle authentication with Vertex AI.
-    *   **Create a Firebase/Google Cloud Project:** If you don't have one, create a new project in the [Firebase Console](https://console.firebase.google.com/).
+    *   **Google Cloud CLI:** Install the `gcloud` CLI.
 
-2.  **Enable APIs:**
+2.  **Authenticate with Google Cloud:**
+    *   Open your terminal and run the following command to log into your Google Account:
+    ```bash
+    gcloud auth login
+    ```
+    *   This will open a browser window for you to complete the login process. This step is crucial for authenticating with Vertex AI.
+
+3.  **Enable APIs:**
     *   In your Google Cloud project, enable the **Vertex AI API** and the **Cloud Build API**. This is necessary for the AI features to work and for deployment.
 
-3.  **Clone the Repository:**
+4.  **Clone the Repository:**
     ```bash
     git clone <repository_url>
     cd <repository_folder>
     ```
 
-4.  **Install Dependencies:**
+5.  **Install Dependencies:**
     ```bash
     npm install
     ```
 
-5.  **Run the Development Server:**
+6.  **Run the Development Server:**
     ```bash
     npm run dev
     ```
 
-6.  **Access the Application:** Open your browser and navigate to `http://localhost:9002`. You can now sign up and use the application as described in the testing scenarios below.
+7.  **Access the Application:** Open your browser and navigate to `http://localhost:9002`. You can now sign up and use the application as described in the testing scenarios below.
 
 ### Deployment Instructions
 
 To deploy the application to Google Cloud Run, use the following command from the root of the project directory. Ensure your `gcloud` CLI is configured to use the correct Google Cloud project where you enabled the APIs.
 
 ```bash
-# This single command builds the container image using Cloud Build and deploys it to Cloud Run.
 gcloud run deploy vidhik-ai --source . --region us-central1
 ```
+This single command builds the container image using Cloud Build and deploys it to Cloud Run.
 
 ### Testing Scenarios
 
