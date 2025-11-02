@@ -19,7 +19,8 @@ Our vision is to **create a future where no one is disadvantaged by a contract t
 
 This vision directly aligns with the focus area of **empowering people with access to information and opportunity**. Vidhik AI achieves this by:
 
-*   **Promoting Financial & Legal Literacy:** By demystifying contracts, we help people understand their financial commitments (like rent, loans, and service fees) and legal rights, preventing debt traps and unfair contractual obligations.
+*   **Promoting Financial & Legal Literacy:** By demystifying contracts, we help people understand their financial commitments (like rent, loans, and service fees) and legal rights.
+*   **Reducing Financial Risk:** By flagging potentially harmful clauses and unclear deadlines, it helps users avoid costly mistakes and unfair agreements before they are signed.
 *   **Bridging the Language Divide:** Our AI is designed to understand documents in major Indian regional languages. A user can upload a document in their native tongue and receive a clear, structured analysis in simple English, breaking down a significant barrier to comprehension.
 *   **Democratizing Legal Understanding:** We provide a free, accessible tool that offers the kind of initial document analysis typically reserved for those who can afford legal counsel. This empowers students, gig-economy workers, renters, and small business owners to make informed decisions with confidence.
 
@@ -27,8 +28,8 @@ This vision directly aligns with the focus area of **empowering people with acce
 
 The project is highly feasible and built for scale:
 
-*   **Feasibility:** The technical foundation is solid and uses modern, production-ready technologies. By using **Firebase Genkit** to orchestrate calls to Google's powerful **Gemini 2.5 series models**, we can achieve a high degree of accuracy in contextual understanding and analysis right from the start. The strategic use of different models (`2.5-flash` for speed and `2.5-pro` for complexity) makes the application both powerful and cost-effective.
-*   **Scalability:** The entire stack is serverless. **Next.js** provides a performant frontend, and **Firebase Genkit** runs in a serverless environment that can automatically scale to handle a massive number of users without manual intervention. This architecture ensures that as the user base grows, the application remains fast and responsive.
+*   **Feasibility:** The technical foundation is solid and uses modern, production-ready technologies. By using **Firebase Genkit** to orchestrate calls to Google's powerful **Google's Gemini 2.5 Pro & Gemini 2.5 Flash via Vertex AI**, we can achieve a high degree of accuracy in contextual understanding and analysis right from the start.
+*   **Scalability:** The entire stack is serverless. **Next.js** provides a performant frontend, **Firebase Genkit** runs in a serverless environment, and **Firebase Authentication & Firestore** automatically scale to handle a massive number of users without manual intervention. The final application is deployed globally via **Google Cloud Run**.
 
 ## 2. Opportunity and Unique Value Proposition
 
@@ -36,177 +37,175 @@ The project is highly feasible and built for scale:
 
 While other document analysis tools exist, Vidhik AI is uniquely positioned for the Indian context:
 
-*   **Hyper-Localized:** Our primary differentiator is the deep integration of multilingual capabilities, specifically supporting major Indian regional languages. Users can upload a document in their native language and receive analysis and answers, breaking down barriers that generic, English-first tools cannot.
-*   **Action-Oriented Output:** We go beyond simple summarization. Features like the "Jargon Buster," categorized "Risk Analysis," and the ability to export deadlines to a calendar provide actionable insights that empower users to act on the information.
-*   **Conversational Interface:** The ability to ask follow-up questions in natural language (including Hinglish) transforms a static analysis into an interactive, personalized legal consultation.
-
-### How will it solve the problem?
-
-Vidhik AI directly tackles the core problems of legal complexity and language barriers by acting as a "first line of defense" for the common person.
-
-1.  **It translates complexity into clarity:** By converting dense legalese into simple English summaries, risk warnings, and glossaries, it bridges the knowledge gap.
-2.  **It makes information accessible:** By accepting documents in regional languages, it ensures that language is no longer a barrier to understanding one's rights and obligations.
-3.  **It reduces financial risk:** By flagging potentially harmful clauses and unclear deadlines, it helps users avoid costly mistakes and unfair agreements before they are signed.
+*   **Hyper-Localized & Multilingual:** Our primary differentiator is the deep integration of multilingual capabilities. Users can upload a document in a regional Indian language and receive analysis in simple English, breaking down barriers that generic tools cannot.
+*   **Privacy-First with OCR:** Recognizing that many older documents exist only as physical copies, Vidhik AI includes OCR to extract text from scanned images. Crucially, it also automatically detects and masks Personally Identifiable Information (PII) for user privacy.
+*   **Action-Oriented & Interactive:** We go beyond simple summarization. The "Jargon Buster," categorized "Risk Analysis," and the ability to export deadlines to a calendar provide actionable insights. The conversational Q&A turns a static report into a personalized legal consultation.
+*   **Full Session Management:** The platform provides a complete user experience with secure authentication, persistent session history, and a document gallery for easy access to past work.
 
 ### USP (Unique Selling Proposition)
 
-**Vidhik AI is the first AI-powered legal assistant designed for India's linguistic diversity, transforming complex legal documents in any major regional language into simple, actionable insights that anyone can understand.**
+**Vidhik AI is the first privacy-centric legal assistant designed for India's linguistic diversity, transforming complex legal documents—in any major regional language or even scanned images—into simple, actionable insights that anyone can understand and act upon with confidence.**
 
 ## 3. Project Functionalities & Features
 
-### List of Features Offered
+### Brief About the Prototype
+The prototype is a fully functional web application that allows users to sign up, log in, and access the core features of Vidhik AI. When a user uploads a document, the system processes it and transforms the interface into a multi-tab view displaying the **Summary, Risk Analysis, Jargon Buster, and Original Document**. This dashboard also enables users to **chat with their document**, asking specific questions to get instant, context-aware answers.
 
-1.  **AI Document Helper:**
-    *   **File/Text Upload:** Supports various document formats and direct text pasting.
-    *   **Multilingual Support:** Accepts documents in English and major Indian languages.
-    *   **Feature Summary:** Generates a high-level overview in markdown.
-    *   **Risk Analysis:** Identifies and categorizes risks (High, Medium, Low).
-    *   **Jargon Buster:** Creates a glossary of complex legal terms.
-    *   **Obligations & Deadlines Tracker:** Extracts key dates and allows calendar export.
-    *   **Conversational Q&A:** Interactive chat to ask follow-up questions about the document.
+### 1. AI Document Helper
+*   **Flexible Document Input:** Supports uploading text-based files (`.txt`, `.pdf`, `.docx`), direct text pasting, and image uploads (`.png`, `.jpg`) for scanned documents.
+*   **OCR & PII Masking:** For image-based uploads, automatically extracts text and masks sensitive personal information to protect user privacy.
+*   **Multilingual Analysis:** Accepts documents in English and major Indian regional languages, with all output provided in clear English.
+*   **Multi-Tab Analysis Report:**
+    *   **Feature Summary:** A high-level overview in markdown.
+    *   **Risk Analysis:** Identifies and categorizes risks (High, Medium, Low). Users can manually adjust the risk level for any clause.
+    *   **Jargon Buster:** A glossary of complex legal terms with simple definitions.
+    *   **Obligations & Deadlines:** Extracts key dates and allows for calendar export (`.ics` file).
+    *   **Original Document:** A viewer for the original file.
+*   **Conversational Q&A (RAG Implementation):**
+    *   An interactive chat interface is available after the initial analysis.
+    *   This feature uses a **Retrieval-Augmented Generation (RAG)** approach. When a user asks a question, the full text of their document is passed to the AI model as the primary context.
+    *   This forces the AI to generate answers *exclusively* from the provided document, preventing it from inventing information or using external knowledge. This ensures that the answers are highly relevant and grounded in the user's specific legal text.
+*   **Download Original:** Allows users to download the original document they uploaded.
 
-2.  **Compare Documents:**
-    *   **Side-by-Side Upload:** Interface to upload two document versions.
-    *   **Difference Report:** Generates a detailed report of new, changed, and deleted clauses.
+### 2. Compare Documents
+*   **Side-by-Side Upload:** An interface to upload two document versions for comparison.
+*   **Detailed Difference Report:** Generates a report of **New Clauses**, **Changed Terms**, and **Deleted Clauses**, explaining the practical impact of each modification.
 
-3.  **Document & Session Management:**
-    *   **Session History:** Saves and allows revisiting of past analysis/comparison sessions.
-    *   **My Documents:** A gallery of all unique documents for quick access.
+### 3. User & Session Management
+*   **Secure Authentication:** Users can sign up and log in with email and password via Firebase Authentication.
+*   **Session History:** Automatically saves all analysis and comparison sessions to the user's private account. Users can view and reload past sessions from the history panel.
+*   **My Documents:** A gallery of all unique documents a user has ever uploaded, allowing for quick access to start new analysis sessions.
+
+### 4. Information & FAQ
+*   A dedicated, accessible page explaining all features, answering common questions, and detailing the "how-to" of the application to ensure users can get the most out of the platform.
 
 ## 4. Technical Implementation & Architecture
 
 ### Technologies Used
-
 *   **Frontend:** Next.js (App Router), React, TypeScript
-*   **UI:** Tailwind CSS, ShadCN UI
+*   **UI:** Tailwind CSS, ShadCN UI, Framer Motion (for animations)
 *   **AI Backend:** Firebase Genkit
-*   **AI Models:** Google's Gemini 2.5 Flash & Gemini 2.5 Pro
-*   **Server Logic:** Next.js Server Actions
+*   **AI Models:** Google's Gemini 2.5 Pro & Gemini 2.5 Flash via Vertex AI
+*   **Database:** Firestore (for storing user session history)
+*   **Authentication:** Firebase Authentication (Email/Password)
+*   **Deployment:** Google Cloud Run (containerized deployment)
 
-### Architecture Diagram (High-Level)
+### Architecture & Process Flow Diagrams
 
+#### High-Level Architecture
 ```mermaid
 graph TD
-    A[User's Browser] -->|1. Uploads Document| B(Next.js Frontend);
-    B -->|2. Invokes Server Action| C(Next.js Server);
-    C -->|3. Calls Genkit Flow| D(Firebase Genkit Backend);
-    D -->|4. Selects appropriate Gemini Model| E{Gemini 2.5 AI Models};
-    E -->|5. Returns Analysis| D;
-    D -->|6. Returns Structured Data| C;
-    C -->|7. Sends Data to Client| B;
-    B -->|8. Renders Report in UI| A;
+    A[User's Browser] -->|1. Login/Signup| B(Firebase Auth);
+    A -->|2. Uploads Document| C(Next.js Frontend);
+    C -->|3. Invokes Server Action| D(Next.js Server);
+    D -->|4. Calls Genkit Flow| E(Firebase Genkit Backend);
+    E -->|5. Calls Gemini Model via Vertex AI| F{Gemini AI Models};
+    F -->|6. Returns Analysis| E;
+    E -->|7. Returns Structured Data| D;
+    D -->|8. Saves to Firestore| G(Firestore Database);
+    D -->|9. Sends Data to Client| C;
+    C -->|10. Renders Report in UI| A;
 ```
 
-### Process Flow Diagram (AI Document Helper Use Case)
-
+#### Process Flow: AI Document Helper
 ```mermaid
 graph TD
     subgraph User Interaction
-        A(Start) --> B{Upload or Paste Document};
-        B --> C[Click Demystify];
+        A[1. User Uploads Document/Image/Text] --> B{AI Document Helper};
     end
-
-    subgraph Backend Process
-        C --> D{Server Action Triggered};
-        D --> E[Call demystifyDocument Genkit Flow];
-        E --> F(Gemini API Call);
-        F --> G[Receive Structured JSON];
+    subgraph Backend Processing
+        B --> C[2. Next.js server calls 'demystify' Genkit Flow];
+        C --> D[3. Genkit sends document to Gemini 2.5 Pro];
+        D --> E[4. Gemini performs OCR, PII Masking, & Full Analysis];
+        E --> F[5. Gemini returns structured JSON output];
+        F --> G[6. Genkit Flow completes, returns data to Next.js];
     end
-
-    subgraph UI Rendering
-        G --> H{Update UI State};
-        H --> I[Display Summary, Risks, etc.];
-        I --> J(Chat Interface Enabled);
-        J --> K{User Asks Question};
-        K --> D;
-        I --> L(End);
+    subgraph Session & UI Update
+        G --> H[7. Session is saved to Firestore Database];
+        G --> I[8. Next.js sends analysis to client];
+        I --> J[9. UI updates with multi-tab report];
+    end
+    subgraph Conversational Q&A
+        J --> K[10. User asks a question in chat];
+        K --> L[11. 'ask' Genkit Flow is called with question and full document text];
+        L --> M[12. Gemini uses document as context (RAG) to generate an answer];
+        M --> N[13. Answer is streamed back to UI];
     end
 ```
 
-### Mock Diagram / UI Layout
-
-The application is designed as a professional, three-panel dashboard layout:
-
-1.  **Main Sidebar (Left):** A permanent navigation bar providing access to core features: "AI Document Helper," "Compare Documents," "My Documents," and "Info & FAQ." It also contains a search bar for filtering history and documents.
-2.  **Main Content Area (Center):** This is the primary workspace. It dynamically changes based on the selected feature.
-    *   For the **AI Helper**, it initially shows the file upload/paste interface. After analysis, it transforms into a multi-tab view displaying the Summary, Risk Analysis, Jargon Buster, and Original Document.
-    *   For **Document Comparison**, it shows two upload slots and, after processing, the detailed comparison report.
-3.  **History Panel (Right, Collapsible):** This panel shows a chronological list of all past sessions (both analysis and comparisons). Users can click on a session to load its results back into the main content area.
-
-### Brief About the Prototype
-
-Vidhik AI is a comprehensive legal analysis suite designed to transform static legal documents into interactive, actionable intelligence through a sophisticated, user-centric system. It stands out with its multi-modal interaction, allowing users to upload files, paste text, or use voice commands for analysis. The platform's AI provides structured and practical outputs, such as summaries, risk analyses, and key obligations that can be directly exported to a calendar, rather than just a wall of text. This is all presented within a dynamic multi-pane user interface that supports seamless task switching and maintains a persistent session history for an efficient workflow. Underpinning this experience is a modular and scalable AI architecture that uses distinct, purpose-built flows and optimizes different AI models for specific tasks, ensuring both cost-effectiveness and high performance.
+#### Process Flow: Compare Documents
+```mermaid
+graph TD
+    subgraph User Interaction
+        A[1. User uploads Document A & Document B] --> B{Compare Documents};
+    end
+    subgraph Backend Processing
+        B --> C[2. Next.js calls 'compare' Genkit Flow];
+        C --> D[3. Genkit sends both documents to Gemini 2.5 Pro];
+        D --> E[4. Gemini analyzes differences and impacts];
+        E --> F[5. Gemini returns structured JSON report];
+        F --> G[6. Genkit Flow returns data to Next.js];
+    end
+    subgraph Session & UI Update
+        G --> H[7. New comparison session saved to Firestore];
+        G --> I[8. Report is sent to client UI];
+        I --> J[9. UI renders detailed comparison];
+    end
+```
 
 ## 5. Detailed Instructions for Judges to Access and Test
 
-### Local Setup Instructions
+### Accessing the Solution
 
-To run and test the application locally, please follow these steps.
-
-1.  **Clone the Repository:**
-    Open your terminal and clone the GitHub repository to your local machine:
-    ```bash
-    git clone https://github.com/RD500/Vidhik.git
-    cd Vidhik
-    ```
-
-2.  **Install Dependencies:**
-    Install the necessary Node.js packages using npm:
-    ```bash
-    npm install
-    ```
-
-3.  **API Key Configuration:**
-    The application requires a Google Gemini API key to function. Create a new file named `.env` in the root directory of the project. Then, open the `.env` file and add your API key as follows:
-    ```
-    GEMINI_API_KEY= "YOUR_API_KEY_HERE"
-    ```
-    Replace `"YOUR_API_KEY_HERE"` with your actual Gemini API key.
-
-4.  **Run the Application:**
-    Start the local development server:
-    ```bash
-    npm run dev
-    ```
-
-5.  **Access the Application:**
-    Open your web browser and navigate to the following URL:
-    [http://localhost:9002](http://localhost:9002)
-
-The application will now be running on your local machine and is ready for testing
-You can also test it using the hosted url - [vidhik](https://vidhik.vercel.app/)
+1.  **Navigate to the URL:** Please open the provided application URL in your web browser.
+2.  **Create an Account:** You will be directed to the login page. Please **Sign Up** with an email and password to create a secure account.
+3.  **Login:** Log in with your newly created credentials to access the application dashboard.
 
 ### Testing Scenarios
 
-#### Scenario 1: Demystify a Rental Agreement (AI Document Helper)
+#### Scenario 1: Demystify a Scanned Rental Agreement (AI Document Helper)
 
 1.  **Navigate:** From the sidebar, ensure you are on the **"AI Document Helper"** screen.
-2.  **Upload:** Use the "Upload File" or "Paste Text" tab to input a sample rental agreement. (Many standard templates are available online).
-3.  **Analyze:** Click the **"Demystify Document"** button.
+2.  **Upload Image:** Use the **"Scanned/Image"** tab to upload an image of a sample rental agreement.
+3.  **Analyze:** Click "Demystify Document". The analysis will start automatically after the upload.
 4.  **Review the Report:**
     *   Check the **"Feature Summary"** tab for a clear, high-level overview.
-    *   Go to the **"Risk Analysis"** tab to see if any clauses were flagged.
+    *   Go to the **"Risk Analysis"** tab. Note the AI-assigned risk levels. **Change the risk level** for one of the clauses from "Medium" to "High" using the dropdown.
     *   Explore the **"Jargon Buster"** to understand complex terms.
-    *   Visit the **"Obligations & Deadlines"** tab. Click the **"Export to Calendar"** button to download an `.ics` file containing key dates.
+    *   Visit the **"Obligations & Deadlines"** tab. Click **"Export to Calendar"** to download an `.ics` file.
+    *   Click the **"Original Document"** tab to see the image you uploaded.
 5.  **Ask Questions:**
     *   The chat interface will now be active. Ask a specific question about the document, for example:
         *   "What is the notice period for terminating the lease?"
         *   (In Hinglish) "Security deposit kab wapas milega?"
-    *   Verify that the AI provides a relevant and accurate answer based on the document's content.
+    *   Verify that the AI provides a relevant answer based on the document's content.
 
-#### Scenario 2: Compare Two Versions of a Contract (Compare Documents)
+#### Scenario 2: Analyze a Pasted Text Snippet
+
+1.  **Navigate:** Click "New Session" and choose **"AI Document Helper"**.
+2.  **Paste Text:** Select the **"Paste Text"** tab. Copy and paste a few paragraphs of any legal text (e.g., from a website's terms of service).
+3.  **Analyze:** Click the **"Demystify Text"** button.
+4.  **Review:** Briefly review the generated **Summary** and **Risk Analysis**.
+
+#### Scenario 3: Compare Two Versions of a Contract (Compare Documents)
 
 1.  **Navigate:** Click **"Compare Documents"** in the sidebar.
 2.  **Upload Documents:**
-    *   In the "Document A" slot, upload an original contract.
+    *   In the "Document A" slot, upload an original contract file (e.g., a `.docx` or `.pdf`).
     *   In the "Document B" slot, upload a modified version of the same contract (e.g., change the rent amount, add a new clause, or remove one).
 3.  **Compare:** Click the **"Compare Documents"** button.
 4.  **Review the Comparison Report:**
-    *   Examine the generated report which should clearly list any **New Clauses**, **Changed Terms**, and **Deleted Clauses** you introduced.
+    *   Examine the generated report which should clearly list any **New Clauses**, **Changed Terms**, and **Deleted Clauses** in the accordion sections.
 
-#### Scenario 3: Check History and My Documents
+#### Scenario 4: Check History and My Documents
 
-1.  **View History:** After performing the tests above, click the **History icon** in the top-right corner of either the "Helper" or "Compare" view. The side panel should show a list of your recent sessions.
+1.  **View History:** After performing the tests above, click the **History icon** in the top-right corner of the header. The side panel should show a list of your recent sessions.
 2.  **Switch Sessions:** Click on a previous session in the history panel. The application state should update to show the documents and results from that session.
 3.  **Navigate:** Click **"My Documents"** in the main sidebar.
 4.  **Verify:** You should see cards representing each unique document you uploaded during your testing. Clicking on one of these cards will start a new "AI Document Helper" session with that document.
+
+#### Scenario 5: Explore the Info & FAQ page
+
+1.  **Navigate:** Click **"Info & FAQ"** in the main sidebar.
+2.  **Review:** Read through the feature descriptions and frequently asked questions to understand the full capabilities of the application.
+3.  **Test CTA:** Click one of the "Try Vidhik Now" or "Get Started" buttons, which should open the "New Session" dialog.
