@@ -105,48 +105,45 @@ This approach simplifies the architecture while ensuring that every piece of ana
 ```mermaid
 graph TD
     subgraph "User & Browser"
-        A[User's Browser] -->|1. Login/Signup| B(Firebase Auth);
-        A -->|2. Uploads Document| C(Next.js Frontend);
+        A["User's Browser"] -->|1. Login/Signup| B("Firebase Auth");
+        A -->|2. Uploads Document| C["Next.js Frontend"];
     end
 
     subgraph "Application Hosting (Google Cloud Run)"
-        C -->|3. Invokes Server Action| D[Next.js Server];
-        D -->|4. Calls Genkit Flow: RAG| E[Genkit Backend];
-        E -->|5. Calls Gemini via Vertex AI| F{Gemini AI Models};
+        C -->|3. Invokes Server Action| D["Next.js Server"];
+        D -->|4. Calls Genkit Flow (RAG)| E["Genkit Backend"];
+        E -->|5. Calls Gemini via Vertex AI| F{"Gemini AI Models"};
         F -->|6. Returns Analysis| E;
         E -->|7. Returns Structured Data| D;
-        D -->|8. Saves to Firestore| G[Firestore Database];
+        D -->|8. Saves to Firestore| G["Firestore Database"];
         D -->|9. Sends Data to Client| C;
         C -->|10. Renders Report & Enables Chat| A;
     end
-
-
-
 ```
 
 #### Process Flow: AI Document Helper
 ```mermaid
 graph TD
     subgraph User Interaction
-        A[1. User Uploads Document/Image/Text] --> B{AI Document Helper};
+        A["1. User Uploads Document"] --> B{"AI Document Helper"};
     end
     subgraph "Backend Processing (RAG)"
-        B --> C[2. Next.js server calls 'demystify' Genkit Flow];
-        C --> D["3. Genkit sends full document text to Gemini via Vertex AI for analysis (RAG)"];
-        D --> E[4. Gemini performs OCR, PII Masking, & generates structured analysis based on provided text];
-        E --> F[5. Gemini returns structured JSON output];
-        F --> G[6. Genkit Flow completes, returns data to Next.js];
+        B --> C["2. Next.js server calls 'demystify' Genkit Flow"];
+        C --> D["3. Genkit performs RAG by sending full document text to Gemini via Vertex AI"];
+        D --> E["4. Gemini performs OCR, PII Masking, & generates structured analysis"];
+        E --> F["5. Gemini returns structured JSON output"];
+        F --> G["6. Genkit Flow completes, returns data to Next.js"];
     end
     subgraph Session & UI Update
-        G --> H[7. Session is saved to Firestore Database];
-        G --> I[8. Next.js sends analysis to client];
-        I --> J[9. UI updates with multi-tab report];
+        G --> H["7. Session is saved to Firestore"];
+        G --> I["8. Next.js sends analysis to client"];
+        I --> J["9. UI updates with multi-tab report"];
     end
     subgraph "Conversational Q&A (RAG)"
-        J --> K[10. User asks a question in chat];
+        J --> K["10. User asks a question in chat"];
         K --> L["11. 'ask' Genkit Flow is called with question and full document text (RAG via `docs` retriever)"];
-        L --> M[12. Gemini uses document as context to generate an answer];
-        M --> N[13. Answer is streamed back to UI];
+        L --> M["12. Gemini uses document as context to generate an answer"];
+        M --> N["13. Answer is streamed back to UI"];
     end
 ```
 
@@ -154,19 +151,19 @@ graph TD
 ```mermaid
 graph TD
     subgraph User Interaction
-        A[1. User uploads Document A & Document B] --> B{Compare Documents};
+        A["1. User uploads Document A & B"] --> B{"Compare Documents"};
     end
     subgraph "Backend Processing (RAG)"
-        B --> C[2. Next.js calls 'compare' Genkit Flow];
-        C --> D["3. Genkit sends both full document texts to Gemini via Vertex AI for comparison (RAG)"];
-        D --> E[4. Gemini analyzes differences and impacts based on the provided texts];
-        E --> F[5. Gemini returns structured JSON report];
-        F --> G[6. Genkit Flow returns data to Next.js];
+        B --> C["2. Next.js calls 'compare' Genkit Flow"];
+        C --> D["3. Genkit performs RAG by sending both document texts to Gemini via Vertex AI"];
+        D --> E["4. Gemini analyzes differences and impacts"];
+        E --> F["5. Gemini returns structured JSON report"];
+        F --> G["6. Genkit Flow returns data to Next.js"];
     end
     subgraph Session & UI Update
-        G --> H[7. New comparison session saved to Firestore];
-        G --> I[8. Report is sent to client UI];
-        I --> J[9. UI renders detailed comparison];
+        G --> H["7. New comparison session saved to Firestore"];
+        G --> I["8. Report is sent to client UI"];
+        I --> J["9. UI renders detailed comparison"];
     end
 ```
 
