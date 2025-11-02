@@ -98,13 +98,13 @@ graph TD
     A[User's Browser] -->|1. Login/Signup| B(Firebase Auth);
     A -->|2. Uploads Document| C(Next.js Frontend);
     C -->|3. Invokes Server Action| D(Next.js Server);
-    D -->|4. Calls Genkit Flow| E(Firebase Genkit Backend);
+    D -->|4. Calls Genkit Flow (RAG)| E(Firebase Genkit Backend);
     E -->|5. Calls Gemini Model via Vertex AI| F{Gemini AI Models};
     F -->|6. Returns Analysis| E;
     E -->|7. Returns Structured Data| D;
     D -->|8. Saves to Firestore| G(Firestore Database);
     D -->|9. Sends Data to Client| C;
-    C -->|10. Renders Report in UI| A;
+    C -->|10. Renders Report & Enables Chat| A;
 ```
 
 #### Process Flow: AI Document Helper
@@ -113,9 +113,9 @@ graph TD
     subgraph User Interaction
         A[1. User Uploads Document/Image/Text] --> B{AI Document Helper};
     end
-    subgraph Backend Processing
+    subgraph "Backend Processing (RAG)"
         B --> C[2. Next.js server calls 'demystify' Genkit Flow];
-        C --> D[3. Genkit sends document to Gemini 2.5 Pro for full-text analysis];
+        C --> D["3. Genkit sends document to Gemini 2.5 Pro for full-text analysis (RAG)"];
         D --> E[4. Gemini performs OCR, PII Masking, & generates structured analysis];
         E --> F[5. Gemini returns structured JSON output];
         F --> G[6. Genkit Flow completes, returns data to Next.js];
@@ -125,10 +125,10 @@ graph TD
         G --> I[8. Next.js sends analysis to client];
         I --> J[9. UI updates with multi-tab report];
     end
-    subgraph Conversational Q&A
+    subgraph "Conversational Q&A (RAG)"
         J --> K[10. User asks a question in chat];
-        K --> L[11. 'ask' Genkit Flow is called with question and full document text];
-        L --> M[12. Gemini uses document as context (RAG) to generate an answer];
+        K --> L["11. 'ask' Genkit Flow is called with question and full document text (RAG)"];
+        L --> M[12. Gemini uses document as context to generate an answer];
         M --> N[13. Answer is streamed back to UI];
     end
 ```
@@ -139,9 +139,9 @@ graph TD
     subgraph User Interaction
         A[1. User uploads Document A & Document B] --> B{Compare Documents};
     end
-    subgraph Backend Processing
+    subgraph "Backend Processing (RAG)"
         B --> C[2. Next.js calls 'compare' Genkit Flow];
-        C --> D[3. Genkit sends both documents to Gemini 2.5 Pro];
+        C --> D["3. Genkit sends both documents to Gemini 2.5 Pro (RAG)"];
         D --> E[4. Gemini analyzes differences and impacts];
         E --> F[5. Gemini returns structured JSON report];
         F --> G[6. Genkit Flow returns data to Next.js];
@@ -161,7 +161,7 @@ graph TD
 2.  **Create an Account:** You will be directed to the login page. Please **Sign Up** with an email and password to create a secure account.
 3.  **Login:** Log in with your newly created credentials to access the application dashboard.
 
-### Local Setup Instructions (Optional)
+### Local Setup Instructions
 
 To run and test the application on your local machine, please follow these steps:
 
@@ -179,6 +179,14 @@ To run and test the application on your local machine, please follow these steps
     npm run dev
     ```
 4.  **Access the Application:** Open your browser and navigate to `http://localhost:9002`. You can now sign up and use the application as described in the testing scenarios below.
+
+### Deployment Instructions
+
+To deploy the application to Google Cloud Run, use the following command from the root of the project directory:
+
+```bash
+gcloud run deploy vidhik-ai --source . --region us-central1
+```
 
 ### Testing Scenarios
 
@@ -234,5 +242,3 @@ To run and test the application on your local machine, please follow these steps
 1.  **Navigate:** Click **"Info & FAQ"** in the main sidebar.
 2.  **Review:** Read through the feature descriptions and frequently asked questions to understand the full capabilities of the application.
 3.  **Test CTA:** Click one of the "Try Vidhik Now" or "Get Started" buttons, which should open the "New Session" dialog.
-    
-    
