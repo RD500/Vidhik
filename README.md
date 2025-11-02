@@ -104,21 +104,22 @@ This approach simplifies the architecture while ensuring that every piece of ana
 #### High-Level Architecture
 ```mermaid
 graph TD
-    subgraph "User & Browser"
-        A["User's Browser"] -->|1. Login/Signup| B("Firebase Auth");
-        A -->|2. Uploads Document| C["Next.js Frontend"];
+    subgraph U["User & Browser"]
+        A[User's Browser] -->|1: Login/Signup| B(Firebase Auth);
+        A -->|2: Uploads Document| C(Next.js Frontend);
     end
 
-    subgraph "Application Hosting (Google Cloud Run)"
-        C -->|3. Invokes Server Action| D["Next.js Server"];
-        D -->|4. Calls Genkit Flow (RAG)| E["Genkit Backend"];
-        E -->|5. Calls Gemini via Vertex AI| F{"Gemini AI Models"};
-        F -->|6. Returns Analysis| E;
-        E -->|7. Returns Structured Data| D;
-        D -->|8. Saves to Firestore| G["Firestore Database"];
-        D -->|9. Sends Data to Client| C;
-        C -->|10. Renders Report & Enables Chat| A;
+    subgraph H["Application Hosting — Google Cloud Run"]
+        C -->|3: Invokes Server Action| D[Next.js Server];
+        D -->|4: Calls Genkit Flow: RAG| E[Genkit Backend];
+        E -->|5: Calls Gemini via Vertex AI| F{Gemini AI Models};
+        F -->|6: Returns Analysis| E;
+        E -->|7: Returns Structured Data| D;
+        D -->|8: Saves to Firestore| G[Firestore Database];
+        D -->|9: Sends Data to Client| C;
+        C -->|10: Renders Report & Enables Chat| A;
     end
+
 ```
 
 #### Process Flow: AI Document Helper
