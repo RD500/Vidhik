@@ -4,7 +4,7 @@
 
 ### The Problem Your Solution Addresses
 
-In India, millions of people—from students renting their first apartment to small business owners signing service agreements—enter into legally binding contracts without fully understanding the terms. This lack of comprehension stems from two significant barriers:
+In India, millions of people from students renting their first apartment to small business owners signing service agreements enter into legally binding contracts without fully understanding the terms. This lack of comprehension stems from two significant barriers:
 
 1.  **Complex Legal Jargon:** Legal documents are filled with technical language that is impenetrable to the average person.
 2.  **The Language Divide:** A vast number of contracts are written exclusively in English, a language not accessible to a large portion of the Indian population, which is multilingual and diverse.
@@ -44,7 +44,7 @@ While other document analysis tools exist, Vidhik AI is uniquely positioned for 
 
 ### USP (Unique Selling Proposition)
 
-**Vidhik AI is the first privacy-centric legal assistant designed for India's linguistic diversity, transforming complex legal documents—in any major regional language or even scanned images—into simple, actionable insights that anyone can understand and act upon with confidence.**
+**Vidhik AI is the first privacy-centric legal assistant designed for India's linguistic diversity, transforming complex legal documents in any major regional language or even scanned images into simple, actionable insights that anyone can understand and act upon with confidence.**
 
 ## 3. Project Functionalities & Features
 
@@ -63,7 +63,7 @@ The prototype is a fully functional web application that allows users to sign up
     *   **Original Document:** A viewer for the original file.
 *   **Conversational Q&A (RAG Implementation):**
     *   An interactive chat interface is available after the initial analysis.
-    *   This feature uses a **Retrieval-Augmented Generation (RAG)** approach. When a user asks a question, the full text of their document is passed to the AI model as the primary context.
+    *   This feature uses **Retrieval-Augmented Generation (RAG)**. When a user asks a question, the full text of their document is passed to the AI model as the primary context.
     *   This forces the AI to generate answers *exclusively* from the provided document, preventing it from inventing information or using external knowledge. This ensures that the answers are highly relevant and grounded in the user's specific legal text.
 *   **Download Original:** Allows users to download the original document they uploaded.
 
@@ -115,8 +115,8 @@ graph TD
     end
     subgraph Backend Processing
         B --> C[2. Next.js server calls 'demystify' Genkit Flow];
-        C --> D[3. Genkit sends document to Gemini 2.5 Pro];
-        D --> E[4. Gemini performs OCR, PII Masking, & Full Analysis];
+        C --> D[3. Genkit sends document to Gemini 2.5 Pro for full-text analysis];
+        D --> E[4. Gemini performs OCR, PII Masking, & generates structured analysis];
         E --> F[5. Gemini returns structured JSON output];
         F --> G[6. Genkit Flow completes, returns data to Next.js];
     end
@@ -155,15 +155,34 @@ graph TD
 
 ## 5. Detailed Instructions for Judges to Access and Test
 
-### Accessing the Solution
+### Accessing the Live Solution
 
 1.  **Navigate to the URL:** Please open the provided application URL in your web browser.
 2.  **Create an Account:** You will be directed to the login page. Please **Sign Up** with an email and password to create a secure account.
 3.  **Login:** Log in with your newly created credentials to access the application dashboard.
 
+### Local Setup Instructions (Optional)
+
+To run and test the application on your local machine, please follow these steps:
+
+1.  **Clone the Repository:**
+    ```bash
+    git clone <repository_url>
+    cd <repository_folder>
+    ```
+2.  **Install Dependencies:**
+    ```bash
+    npm install
+    ```
+3.  **Run the Development Server:**
+    ```bash
+    npm run dev
+    ```
+4.  **Access the Application:** Open your browser and navigate to `http://localhost:9002`. You can now sign up and use the application as described in the testing scenarios below.
+
 ### Testing Scenarios
 
-#### Scenario 1: Demystify a Scanned Rental Agreement (AI Document Helper)
+#### Scenario 1: Demystify a Scanned Rental Agreement (Image/OCR)
 
 1.  **Navigate:** From the sidebar, ensure you are on the **"AI Document Helper"** screen.
 2.  **Upload Image:** Use the **"Scanned/Image"** tab to upload an image of a sample rental agreement.
@@ -174,20 +193,26 @@ graph TD
     *   Explore the **"Jargon Buster"** to understand complex terms.
     *   Visit the **"Obligations & Deadlines"** tab. Click **"Export to Calendar"** to download an `.ics` file.
     *   Click the **"Original Document"** tab to see the image you uploaded.
-5.  **Ask Questions:**
+5.  **Ask Questions (RAG in action):**
     *   The chat interface will now be active. Ask a specific question about the document, for example:
         *   "What is the notice period for terminating the lease?"
         *   (In Hinglish) "Security deposit kab wapas milega?"
     *   Verify that the AI provides a relevant answer based on the document's content.
 
-#### Scenario 2: Analyze a Pasted Text Snippet
+#### Scenario 2: Analyze a Text-Based Document (PDF/DOCX)
+
+1.  **Navigate:** Click "New Session" if needed, and select **"AI Document Helper"**.
+2.  **Upload File:** In the **"Upload File"** tab, upload a text-based document like a `.pdf` or `.docx` file of a sample contract.
+3.  **Analyze & Review:** Click "Demystify Document" and review the generated **Summary** and **Risk Analysis**.
+
+#### Scenario 3: Analyze a Pasted Text Snippet
 
 1.  **Navigate:** Click "New Session" and choose **"AI Document Helper"**.
 2.  **Paste Text:** Select the **"Paste Text"** tab. Copy and paste a few paragraphs of any legal text (e.g., from a website's terms of service).
 3.  **Analyze:** Click the **"Demystify Text"** button.
 4.  **Review:** Briefly review the generated **Summary** and **Risk Analysis**.
 
-#### Scenario 3: Compare Two Versions of a Contract (Compare Documents)
+#### Scenario 4: Compare Two Versions of a Contract
 
 1.  **Navigate:** Click **"Compare Documents"** in the sidebar.
 2.  **Upload Documents:**
@@ -197,15 +222,17 @@ graph TD
 4.  **Review the Comparison Report:**
     *   Examine the generated report which should clearly list any **New Clauses**, **Changed Terms**, and **Deleted Clauses** in the accordion sections.
 
-#### Scenario 4: Check History and My Documents
+#### Scenario 5: Check History and My Documents
 
 1.  **View History:** After performing the tests above, click the **History icon** in the top-right corner of the header. The side panel should show a list of your recent sessions.
 2.  **Switch Sessions:** Click on a previous session in the history panel. The application state should update to show the documents and results from that session.
 3.  **Navigate:** Click **"My Documents"** in the main sidebar.
 4.  **Verify:** You should see cards representing each unique document you uploaded during your testing. Clicking on one of these cards will start a new "AI Document Helper" session with that document.
 
-#### Scenario 5: Explore the Info & FAQ page
+#### Scenario 6: Explore the Info & FAQ page
 
 1.  **Navigate:** Click **"Info & FAQ"** in the main sidebar.
 2.  **Review:** Read through the feature descriptions and frequently asked questions to understand the full capabilities of the application.
 3.  **Test CTA:** Click one of the "Try Vidhik Now" or "Get Started" buttons, which should open the "New Session" dialog.
+    
+    
